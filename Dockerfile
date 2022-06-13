@@ -3,18 +3,14 @@ FROM ubuntu:20.04
 RUN apt update
 RUN apt install -yy gcc g++ cmake
 
-COPY . /src
-COPY . /exec
-COPY . /logs
-
-WORKDIR exec
+COPY . app/
+WORKDIR app/exec/
 
 RUN cmake -H. -B_build
-RUN cmake -build _build
+RUN cmake --build _build
 
-ENV LOG_PATH ../logs/log.txt
+WORKDIR _build/
 
-VOLUME ../logs
+VOLUME ["/app/logs"]
 
-ENTRYPOINT [ "./example1" ]
-ENTRYPOINT [ "./example2", LOG_PATH ]
+ENTRYPOINT ./example1 && ./example2
